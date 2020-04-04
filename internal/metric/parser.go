@@ -18,26 +18,28 @@ func Parse(data *heatpump.Data) *Metric {
 func parseParameters(values *[]int32, m *Metric) {
 	for i, value := range *values {
 		switch i {
-		case 1:
-			m.addTemperature("temperature_tolerance", parseDoubleValue(value))
-		case 3:
-			m.addOperationMode("heating_circuit", value)
-		case 4:
-			m.addOperationMode("hot_water", value)
+		case 1: //ok
+			m.addTemperature("heating_temperature_tolerance", parseDoubleValue(value)) //degree
+		case 3: //ok
+			m.addOperationMode("heating_circuit", value) // enum
+		case 4: //ok
+			m.addOperationMode("hot_water", value) // enum
+		case 75: //ok
+			m.addTemperature("hysteresis_hot_water", parseDoubleValue(value)) // kelvin
 		case 105:
-			m.addHotWater("temperature_tolerance", parseDoubleValue(value)) //degrees
+			m.addHotWater("temperature_tolerance", parseDoubleValue(value)) //degree
 		case 108:
 			m.addCoolingOperationMode("cooling", value)
 		case 110:
-			m.addCooling("outdoor_temperature_clearance", parseDoubleValue(value)) //degrees
+			m.addCooling("outdoor_temperature_clearance", parseDoubleValue(value)) //degree
 		case 119:
 			m.addOperationMode("pool", value)
 		case 124:
 			m.addHeating("solar_t_diff", parseDoubleValue(value)) //degress
 		case 132:
-			m.addCooling("set_point_mk1", parseDoubleValue(value)) //degrees
+			m.addCooling("set_point_mk1", parseDoubleValue(value)) //degree
 		case 133:
-			m.addCooling("set_point_mk2", parseDoubleValue(value)) //degrees
+			m.addCooling("set_point_mk2", parseDoubleValue(value)) //degree
 		case 134:
 			m.addCooling("working_temperature_difference_1", parseDoubleValue(value)) //kelvin
 		case 135:
@@ -55,7 +57,7 @@ func parseParameters(values *[]int32, m *Metric) {
 		case 894:
 			m.addVentilationOperationMode("ventilation", value)
 		case 966:
-			m.addCooling("set_point_mk3", parseDoubleValue(value)) //degrees
+			m.addCooling("set_point_mk3", parseDoubleValue(value)) //degree
 		case 967:
 			m.addCooling("working_temperature_difference_3", parseDoubleValue(value)) //kelvin
 		}
@@ -89,8 +91,6 @@ func parseValues(values *[]int32, m *Metric) {
 			m.addTemperature("probe_out", parseDoubleValue(value)) //degress
 		case 21:
 			m.addTemperature("mk1", parseDoubleValue(value)) //degress
-		case 24:
-			m.addTemperature("mk2", parseDoubleValue(value)) //degress
 		case 26:
 			m.addSolar("solar_collector", parseDoubleValue(value)) //degress
 		case 27:
@@ -121,10 +121,6 @@ func parseValues(values *[]int32, m *Metric) {
 			m.addOutput("ZUP", value)
 		case 48:
 			m.addOutput("ZW1", value)
-		case 49:
-			m.addOutput("ZW2SST", value)
-		case 50:
-			m.addOutput("ZW3SST", value)
 		case 51:
 			m.addOutput("FP2", value)
 		case 52:
