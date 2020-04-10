@@ -18,48 +18,18 @@ func Parse(data *heatpump.Data) *Metric {
 func parseParameters(values *[]int32, m *Metric) {
 	for i, value := range *values {
 		switch i {
-		case 1: //ok
-			m.addTemperature("heating_temperature_tolerance", parseDoubleValue(value)) //degree
-		case 3: //ok
-			m.addOperationMode("heating_circuit", value) // enum
-		case 4: //ok
-			m.addOperationMode("hot_water", value) // enum
-		case 75: //ok
-			m.addTemperature("hysteresis_hot_water", parseDoubleValue(value)) // kelvin
-		case 105:
-			m.addHotWater("temperature_tolerance", parseDoubleValue(value)) //degree
-		case 108:
-			m.addCoolingOperationMode("cooling", value)
-		case 110:
-			m.addCooling("outdoor_temperature_clearance", parseDoubleValue(value)) //degree
-		case 119:
-			m.addOperationMode("pool", value)
+		case 1:
+			m.addTemperature("heating_temperature_tolerance", parseDoubleValue(value))
+		case 4:
+			m.addOperationMode("hot_water", value)
+		case 74:
+			m.addThermal("hysteresis_hot_water", parseDoubleValue(value))
 		case 124:
-			m.addHeating("solar_t_diff", parseDoubleValue(value)) //degress
-		case 132:
-			m.addCooling("set_point_mk1", parseDoubleValue(value)) //degree
-		case 133:
-			m.addCooling("set_point_mk2", parseDoubleValue(value)) //degree
-		case 134:
-			m.addCooling("working_temperature_difference_1", parseDoubleValue(value)) //kelvin
-		case 135:
-			m.addCooling("working_temperature_difference_2", parseDoubleValue(value)) //kelvin
-		case 696:
-			m.addOperationMode("heating_mixed_circuit_2", value)
+			m.addTemperature("solar_t_diff", parseDoubleValue(value))
 		case 779:
 			m.addOperationMode("heating_mixed_circuit_3", value)
-		case 850:
-			m.addCooling("outdoor_temperature_overrun", parseDoubleValue(value)) //hours
-		case 851:
-			m.addCooling("outdoor_temperature_underrun", parseDoubleValue(value)) //hours
 		case 881:
 			m.addOperationMode("solar", value)
-		case 894:
-			m.addVentilationOperationMode("ventilation", value)
-		case 966:
-			m.addCooling("set_point_mk3", parseDoubleValue(value)) //degree
-		case 967:
-			m.addCooling("working_temperature_difference_3", parseDoubleValue(value)) //kelvin
 		}
 	}
 }
@@ -68,106 +38,80 @@ func parseValues(values *[]int32, m *Metric) {
 	for i, value := range *values {
 		switch i {
 		case 10:
-			m.addTemperature("outgoing", parseDoubleValue(value)) //degress
+			m.addTemperature("outgoing", parseDoubleValue(value)) //Vorlauf
 		case 11:
-			m.addTemperature("incoming_effective", parseDoubleValue(value)) //degress
+			m.addTemperature("incoming_effective", parseDoubleValue(value)) //Rücklauf
 		case 12:
-			m.addTemperature("incoming_nominal", parseDoubleValue(value)) //degress
+			m.addTemperature("incoming_nominal", parseDoubleValue(value)) //Rücklauf-Soll
 		case 13:
-			m.addTemperature("incoming_external", parseDoubleValue(value)) //degress
+			m.addTemperature("incoming_external", parseDoubleValue(value)) // Externe Energ.Quelle
 		case 14:
-			m.addTemperature("hot_gas", parseDoubleValue(value)) //degress
+			m.addTemperature("hot_gas", parseDoubleValue(value)) //Heissgas
 		case 15:
-			m.addTemperature("outdoor", parseDoubleValue(value)) //degress
+			m.addTemperature("outdoor", parseDoubleValue(value)) //Außentemperatur
 		case 16:
-			m.addTemperature("outdoor_avg", parseDoubleValue(value)) //degress
+			m.addTemperature("outdoor_avg", parseDoubleValue(value)) //Mittelwertemperatur
 		case 17:
-			m.addTemperature("hot_water_effective", parseDoubleValue(value)) //degress
+			m.addTemperature("hot_water_effective", parseDoubleValue(value)) //Warmwasser-Ist
 		case 18:
-			m.addTemperature("hot_water_nominal", parseDoubleValue(value)) //degress
+			m.addTemperature("hot_water_max_temperature", parseDoubleValue(value)) //Warmwasser-Soll
 		case 19:
-			m.addTemperature("probe_in", parseDoubleValue(value)) //degress
-		case 20:
-			m.addTemperature("probe_out", parseDoubleValue(value)) //degress
-		case 21:
-			m.addTemperature("mk1", parseDoubleValue(value)) //degress
+			m.addTemperature("probe_in", parseDoubleValue(value))
 		case 26:
-			m.addSolar("solar_collector", parseDoubleValue(value)) //degress
+			m.addTemperature("solar_collector", parseDoubleValue(value))
 		case 27:
-			m.addSolar("solar_tank", parseDoubleValue(value)) //degress
+			m.addTemperature("solar_tank", parseDoubleValue(value))
 		case 28:
-			m.addTemperature("external_source", parseDoubleValue(value)) //degress
+			m.addTemperature("external_source", parseDoubleValue(value))
 		case 37:
-			m.addOutput("AV", value)
+			m.addOutput("AV", value) //Abtauventil
 		case 38:
-			m.addOutput("BUP", value)
+			m.addOutput("BUP", value) //Brauchwasserpumpe/Umstellventil/Trinkwasserumwälzpumpe
 		case 39:
-			m.addOutput("HUP", value)
+			m.addOutput("HUP", value) //Heizungsumwälzpumpe
 		case 40:
-			m.addOutput("MA1", value)
+			m.addOutput("MA1", value) //Mischkreis 1 auf
 		case 41:
-			m.addOutput("MZ1", value)
+			m.addOutput("MZ1", value) //Mischkreis 1 zu
 		case 42:
-			m.addOutput("VEN", value)
+			m.addOutput("VEN", value) //Ventilation/Lüftung
 		case 43:
-			m.addOutput("VBO", value)
+			m.addOutput("VBO", value) //Solepumpe/Ventilator
 		case 44:
-			m.addOutput("VD1", value)
-		case 45:
-			m.addOutput("VD2", value)
-		case 46:
-			m.addOutput("ZIP", value)
+			m.addOutput("VD1", value) //Verdichter 1
 		case 47:
-			m.addOutput("ZUP", value)
+			m.addOutput("ZUP", value) //Zusatzumwälzpumpe
 		case 48:
-			m.addOutput("ZW1", value)
+			m.addOutput("ZW1", value) //Steuersignal Zusatzheizung v. Heizung
 		case 51:
-			m.addOutput("FP2", value)
+			m.addOutput("FP2", value) //Pumpe Mischkreis 2 TODO nachfragen
 		case 52:
-			m.addOutput("SLP", value)
-		case 53:
-			m.addOutput("SUP", value)
+			m.addOutput("SLP", value) //Solarladepumpe
 		case 54:
-			m.addOutput("MZ2", value)
+			m.addOutput("MZ2", value) //Mischkreis 2 zu TODO nachfragen
 		case 55:
-			m.addOutput("MA2", value)
+			m.addOutput("MA2", value) //Mischkreis 2 auf TODO nachfragen
 		case 56:
-			m.addOperatingHours("cmp1", parseHours(value)) //hours
+			m.addOperatingHour("cmp1", value)
 		case 57:
-			m.addOperatingHours("pulse_cmp1", value) //counter
+			m.addCount("pulse_cmp1", value)
 
 			if !((*values)[56] == 0 || (*values)[57] == 0) {
-				m.addOperatingHours(
-					"average_runtime_cmp1",
-					formatDouble(float32((*values)[56])/float32((*values)[57]*3600)),
-				) //hours
-			}
-		case 58:
-			m.addOperatingHours("cmp2", parseHours(value)) //hours
-		case 59:
-			m.addOperatingHours("pulse_cmp2", parseHours(value)) //counter
-
-			if !((*values)[58] == 0 || (*values)[59] == 0) {
-				m.addOperatingHours(
-					"average_runtime_cmp2",
-					formatDouble(float32((*values)[58])/float32((*values)[59]*3600)),
-				) //hours
+				m.addOperatingHour(
+					"cmp1_runtime_avg",
+					formatDouble(float32((*values)[56]/60)/float32((*values)[57])),
+				)
 			}
 		case 60:
-			m.addOperatingHours("shg1" /* zwe1 */, parseHours(value))
-			//float32(value) / 3600) //hours
-		case 61:
-			m.addOperatingHours("shg2" /* zwe2 */, parseHours(value)) // //hours
-		case 62:
-			m.addOperatingHours("shg3" /* zwe3 */, parseHours(value)) // //hours
-		case 63:
-			m.addOperatingHours("heatpump", parseHours(value)) // //hours
+			m.addOperatingHour("shg1", value) //zweiter Wärmerzeuger 1
 		case 64:
-			m.addOperatingHours("heating", parseHours(value)) // //hours
+			m.addOperatingHour("heating", value)
 		case 65:
-			m.addOperatingHours("bw", parseHours(value)) // //hours
-		case 66:
-			m.addOperatingHours("cooling", parseHours(value)) // //hours
+			m.addOperatingHour("hot_water", value)
+		case 80:
+			m.addOperationState("heatpump", value)
+		case 88:
+			m.addThermal("hysteresis_heating", parseDoubleValue(value))
 		case 100:
 			if value != 0 {
 				m.addFault("code", value, int64((*values)[i-5]))
@@ -190,59 +134,60 @@ func parseValues(values *[]int32, m *Metric) {
 			}
 		case 106:
 			if value != 0 {
-				m.addShutdowns("code", value, int64((*values)[i+5]))
+				m.addShutdown("code", value, int64((*values)[i+5]))
 			}
 		case 107:
 			if value != 0 {
-				m.addShutdowns("code", value, int64((*values)[i+5]))
+				m.addShutdown("code", value, int64((*values)[i+5]))
 			}
 		case 108:
 			if value != 0 {
-				m.addShutdowns("code", value, int64((*values)[i+5]))
+				m.addShutdown("code", value, int64((*values)[i+5]))
 			}
 		case 109:
 			if value != 0 {
-				m.addShutdowns("code", value, int64((*values)[i+5]))
+				m.addShutdown("code", value, int64((*values)[i+5]))
 			}
 		case 110:
 			if value != 0 {
-				m.addShutdowns("code", value, int64((*values)[i+5]))
+				m.addShutdown("code", value, int64((*values)[i+5]))
 			}
 		case 138:
-			m.addOutput("MZ3", value)
+			m.addOutput("MZ3", value) //Mischkreis 3 zu TODO nachfragen
 		case 139:
-			m.addOutput("MA3", value)
-		case 140:
-			m.addOutput("FP3", value)
-		case 145:
-			m.addOperatingHours("sw", parseHours(value)) //hours
+			m.addOutput("MA3", value) //Mischkreis 3 auf TODO nachfragen
+		case 147:
+			m.addVolt("AIn", parseVolt(value)) //Analoges Eingangssignal
 		case 151:
-			m.addThermal("heating", parseThermal(value))
+			m.addEnergy("heating", parseEnergy(value))
 		case 152:
-			m.addThermal("hot_water", parseThermal(value))
-		case 153:
-			m.addThermal("pool", parseThermal(value))
-		case 154:
-			heating := parseThermal((*values)[151])
-			hotWater := parseThermal((*values)[152])
-			pool := parseThermal((*values)[153])
-			m.addThermal("total", heating+hotWater+pool)
-		case 155:
-			m.addThermal("massflow", value)
+			m.addEnergy("hot_water", parseEnergy(value))
+		case 157:
+			m.addVolt("AO2", parseVolt(value)) //Analoges Ausgangssignal 2
 		case 161:
-			m.addOperatingHours("solar", parseHours(value)) //hours
+			m.addOperatingHour("solar", value)
 		case 166:
-			m.addOutput("VSK", value)
+			m.addOutput("VSK", value) //TODO nachfragen
 		case 167:
-			m.addOutput("FRH", value)
+			m.addOutput("FRH", value) //TODO nachfragen
+		case 176:
+			m.addTemperature("AVD", parseDoubleValue(value)) //Ansaug VD
+		case 177:
+			m.addTemperature("VDH", parseDoubleValue(value)) //VD-Heizung
+		case 178:
+			m.addThermal("UE", parseDoubleValue(value)) //Überhitzung
+		case 180:
+			m.addPressure("HD", parseDoubleValue(value))
+		case 181:
+			m.addPressure("ND", parseDoubleValue(value))
 		case 213:
-			m.addOutput("AV2", value)
+			m.addOutput("AV2", value) //Abtauventil 2 TODO nachfragen
 		case 214:
-			m.addOutput("VBO2", value)
+			m.addOutput("VBO2", value) //Solepumpe/Ventilator TODO nachfragen
 		case 215:
-			m.addOutput("VD12", value)
+			m.addOutput("VD12", value) //Verdichter 1/2  TODO nachfragen
 		case 216:
-			m.addOutput("VDH2", value)
+			m.addOutput("VDH2", value) //Verdichterheizung 2 TODO nachfragen
 		}
 	}
 }
@@ -251,11 +196,8 @@ func parseState(data *heatpump.Data, m *Metric) {
 	parameters := data.Parameters
 	values := data.Values
 
-	var ventilationState int32
-	var coolingState int32
 	var hotWaterState int32
 	var heatingState int32
-	var poolState int32
 
 	if (*values)[80] == 0 {
 		heatingState = 2
@@ -281,63 +223,31 @@ func parseState(data *heatpump.Data, m *Metric) {
 
 	m.addState("heating", heatingState)
 
-	param := (*values)[17]
-
 	if (*values)[80] == 1 {
 		hotWaterState = 2
 	} else if (*parameters)[4] == 4 {
 		hotWaterState = 0
 	} else if (*parameters)[82] == 1 {
-		if param > 0 {
+		if (*values)[17] > 0 {
 			hotWaterState = 1
 		} else {
 			hotWaterState = 3
 		}
-	} else if param < (*values)[18]-(*parameters)[74] {
+	} else if (*values)[17] < (*values)[18]-(*parameters)[74] {
 		hotWaterState = 1
 	} else {
 		hotWaterState = 3
 	}
 
 	m.addState("water", hotWaterState)
-
-	if (*values)[80] == 2 {
-		poolState = 2
-	} else if (*parameters)[119] == 4 {
-		poolState = 0
-	} else if (*values)[36] > 0 {
-		poolState = 1
-	} else {
-		poolState = 3
-	}
-
-	m.addState("pool", poolState)
-
-	if (*values)[80] == 7 {
-		coolingState = 2
-	} else if (*parameters)[108] == 0 {
-		coolingState = 0
-	} else {
-		coolingState = 3
-	}
-	m.addState("cooling", coolingState)
-
-	if (*parameters)[894] != 3 {
-		ventilationState = 3
-	} else {
-		ventilationState = 0
-	}
-
-	m.addState("ventilation", ventilationState)
-	m.addState("solar", 0)
 }
 
 func parseDoubleValue(v int32) string {
 	return formatDouble(float32(v) / 10)
 }
 
-func parseHours(v int32) float32 {
-	return float32(v) / 3600
+func parseVolt(v int32) string {
+	return fmt.Sprintf("%.2f", float32(v)/100)
 }
 
 func formatDouble(v float32) string {
@@ -348,7 +258,7 @@ func formatDouble(v float32) string {
 // the thermal energies can be unreasonably high in some cases,
 // probably due to a sign bug in the firmware
 // trying to correct this issue here
-func parseThermal(v int32) int32 {
+func parseEnergy(v int32) int32 {
 	if v >= 214748364 {
 		v = v - 214748364
 	}

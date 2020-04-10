@@ -10,18 +10,17 @@ import (
 const (
 	t   = "temperature"
 	om  = "operation_mode"
-	hw  = "hot_water"
-	c   = "cooling"
-	h   = "heating"
-	com = "cooling_operation_mode"
-	vom = "ventilation_operation_mode"
-	so  = "solar"
 	o   = "output"
-	oh  = "operating_hours"
+	oh  = "operating_hour"
 	f   = "fault"
-	sd  = "shutdowns"
-	th  = "thermal"
+	s   = "shutdown"
+	th  = "thermal" //kelvin
 	st  = "state"
+	c   = "count"
+	p   = "pressure"
+	e   = "energy"
+	v   = "volt"
+	ops = "operation_state"
 )
 
 type DataPoint struct {
@@ -65,35 +64,11 @@ func (m *Metric) addOperationMode(field string, value interface{}) {
 	m.add(om, field, value)
 }
 
-func (m *Metric) addCoolingOperationMode(field string, value interface{}) {
-	m.add(com, field, value)
-}
-
-func (m *Metric) addHotWater(field string, value interface{}) {
-	m.add(hw, field, value)
-}
-
-func (m *Metric) addCooling(field string, value interface{}) {
-	m.add(c, field, value)
-}
-
-func (m *Metric) addHeating(field string, value interface{}) {
-	m.add(h, field, value)
-}
-
-func (m *Metric) addVentilationOperationMode(field string, value interface{}) {
-	m.add(vom, field, value)
-}
-
-func (m *Metric) addSolar(field string, value interface{}) {
-	m.add(so, field, value)
-}
-
 func (m *Metric) addOutput(field string, value interface{}) {
 	m.add(o, field, value)
 }
 
-func (m *Metric) addOperatingHours(field string, value interface{}) {
+func (m *Metric) addOperatingHour(field string, value interface{}) {
 	m.add(oh, field, value)
 }
 
@@ -101,16 +76,36 @@ func (m *Metric) addFault(field string, value interface{}, timestamp int64) {
 	m.addAtTime(f, field, value, timestamp)
 }
 
-func (m *Metric) addShutdowns(field string, value interface{}, timestamp int64) {
-	m.addAtTime(sd, field, value, timestamp)
+func (m *Metric) addShutdown(field string, value interface{}, timestamp int64) {
+	m.addAtTime(s, field, value, timestamp)
+}
+
+func (m *Metric) addEnergy(field string, value interface{}) {
+	m.add(e, field, value)
+}
+
+func (m *Metric) addState(field string, value interface{}) {
+	m.add(st, field, value)
+}
+
+func (m *Metric) addCount(field string, value interface{}) {
+	m.add(c, field, value)
+}
+
+func (m *Metric) addPressure(field string, value interface{}) {
+	m.add(p, field, value)
 }
 
 func (m *Metric) addThermal(field string, value interface{}) {
 	m.add(th, field, value)
 }
 
-func (m *Metric) addState(field string, value interface{}) {
-	m.add(st, field, value)
+func (m *Metric) addVolt(field string, value interface{}) {
+	m.add(v, field, value)
+}
+
+func (m *Metric) addOperationState(field string, value interface{}) {
+	m.add(ops, field, value)
 }
 
 func (m *Metric) add(category string, field string, value interface{}) {
@@ -132,20 +127,14 @@ func New() *Metric {
 	return &Metric{
 		time.Now().UTC().Unix(),
 		CategoryData{
-			t:   make([]DataPoint, 0),
-			om:  make([]DataPoint, 0),
-			hw:  make([]DataPoint, 0),
-			c:   make([]DataPoint, 0),
-			h:   make([]DataPoint, 0),
-			com: make([]DataPoint, 0),
-			vom: make([]DataPoint, 0),
-			so:  make([]DataPoint, 0),
-			o:   make([]DataPoint, 0),
-			oh:  make([]DataPoint, 0),
-			f:   make([]DataPoint, 0),
-			sd:  make([]DataPoint, 0),
-			th:  make([]DataPoint, 0),
-			st:  make([]DataPoint, 0),
+			t:  make([]DataPoint, 0),
+			om: make([]DataPoint, 0),
+			o:  make([]DataPoint, 0),
+			oh: make([]DataPoint, 0),
+			f:  make([]DataPoint, 0),
+			s:  make([]DataPoint, 0),
+			th: make([]DataPoint, 0),
+			st: make([]DataPoint, 0),
 		},
 	}
 }
