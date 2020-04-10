@@ -26,6 +26,8 @@ func ReadData() (*Data, error) {
 	log.Printf("reading data from %v", address)
 
 	connection, err := NewSocketConnection(address)
+	defer connection.Close()
+
 	if err != nil {
 		return &Data{}, err
 	}
@@ -36,8 +38,6 @@ func ReadData() (*Data, error) {
 	if err == nil {
 		values, err = readData(operationValues, &connection)
 	}
-
-	connection.Close()
 
 	return &Data{parameters, values}, err
 }

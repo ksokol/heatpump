@@ -1,8 +1,10 @@
 package heatpump
 
 import (
+	"context"
 	"log"
 	"net"
+	"time"
 )
 
 type SocketConnection struct {
@@ -34,9 +36,15 @@ func (so *SocketConnection) Close() {
 }
 
 func NewSocketConnection(address string) (SocketConnection, error) {
-	connection, err := net.Dial("tcp", address)
+	var dialer net.Dialer
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	connection, err := dialer.DialContext(ctx, "tcp", address)
+
 	if err == nil {
 		log.Printf("connection to %v open", connection.RemoteAddr())
+		err = connection.SetDeadline(time.Now().Add(1 * time.Second))
 	}
 	return SocketConnection{connection}, err
 }

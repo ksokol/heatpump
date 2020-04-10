@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"time"
 )
 
 var url string
@@ -30,7 +31,10 @@ func SendMetric(reader io.Reader) error {
 
 	req.Header.Add("Authorization", basicAuth)
 
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: 1 * time.Second,
+	}
+
 	resp, err := client.Do(req)
 
 	if err == nil && resp.StatusCode != 204 {
