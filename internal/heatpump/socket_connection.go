@@ -11,7 +11,7 @@ type SocketConnection struct {
 	connection net.Conn
 }
 
-func (so *SocketConnection) Write(values ...int32) (int, error) {
+func (so *SocketConnection) write(values ...int32) (int, error) {
 	p := make([]byte, 0)
 	for _, value := range values {
 		p = append(p, toBytes(value)...)
@@ -19,7 +19,7 @@ func (so *SocketConnection) Write(values ...int32) (int, error) {
 	return so.connection.Write(p)
 }
 
-func (so *SocketConnection) Read() (int32, error) {
+func (so *SocketConnection) read() (int32, error) {
 	p := make([]byte, 4)
 	_, err := so.connection.Read(p)
 	var v int32
@@ -29,13 +29,13 @@ func (so *SocketConnection) Read() (int32, error) {
 	return v, err
 }
 
-func (so *SocketConnection) Close() {
+func (so *SocketConnection) close() {
 	address := so.connection.RemoteAddr()
 	_ = so.connection.Close()
 	log.Printf("connection to %v closed", address)
 }
 
-func NewSocketConnection(address string) (SocketConnection, error) {
+func newSocketConnection(address string) (SocketConnection, error) {
 	var dialer net.Dialer
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()

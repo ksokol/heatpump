@@ -25,8 +25,8 @@ func init() {
 func ReadData() (*Data, error) {
 	log.Printf("reading data from %v", address)
 
-	connection, err := NewSocketConnection(address)
-	defer connection.Close()
+	connection, err := newSocketConnection(address)
+	defer connection.close()
 
 	if err != nil {
 		return &Data{}, err
@@ -45,25 +45,25 @@ func ReadData() (*Data, error) {
 func readData(operationCommand int32, connection *SocketConnection) (*[]int32, error) {
 	log.Printf("start reading operation %v", operationCommand)
 
-	if _, err := connection.Write(operationCommand, 0); err != nil {
+	if _, err := connection.write(operationCommand, 0); err != nil {
 		return nil, err
 	}
 
-	if operation, err := connection.Read(); err != nil {
+	if operation, err := connection.read(); err != nil {
 		return nil, err
 	} else if operation != operationCommand {
 		return nil, fmt.Errorf("operation command %v received. expected %v", operation, operationCommand)
 	}
 
 	if operationCommand == operationValues {
-		if v, err := connection.Read(); err != nil {
+		if v, err := connection.read(); err != nil {
 			return nil, err
 		} else if v != 0 {
 			return nil, fmt.Errorf("command %v expected 0 value got %v", operationCommand, v)
 		}
 	}
 
-	dataSize, err := connection.Read()
+	dataSize, err := connection.read()
 
 	if err != nil {
 		return nil, err
@@ -72,7 +72,7 @@ func readData(operationCommand int32, connection *SocketConnection) (*[]int32, e
 	values := make([]int32, dataSize)
 
 	for i := int32(0); i < dataSize; i++ {
-		v, err := connection.Read()
+		v, err := connection.read()
 
 		if err != nil {
 			values = nil
