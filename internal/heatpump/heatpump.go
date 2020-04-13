@@ -25,12 +25,13 @@ func init() {
 func ReadData() (*Data, error) {
 	log.Printf("reading data from %v", address)
 
-	connection, err := newSocketConnection(address)
-	defer connection.close()
+	connection, err := newSocketConnection()
 
 	if err != nil {
 		return &Data{}, err
 	}
+
+	defer connection.close()
 
 	parameters, err := readData(operationParameters, &connection)
 	var values *[]int32

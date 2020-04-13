@@ -30,12 +30,11 @@ func (so *SocketConnection) read() (int32, error) {
 }
 
 func (so *SocketConnection) close() {
-	address := so.connection.RemoteAddr()
 	_ = so.connection.Close()
 	log.Printf("connection to %v closed", address)
 }
 
-func newSocketConnection(address string) (SocketConnection, error) {
+func newSocketConnection() (SocketConnection, error) {
 	var dialer net.Dialer
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
@@ -43,7 +42,7 @@ func newSocketConnection(address string) (SocketConnection, error) {
 	connection, err := dialer.DialContext(ctx, "tcp", address)
 
 	if err == nil {
-		log.Printf("connection to %v open", connection.RemoteAddr())
+		log.Printf("connection to %v open", address)
 		err = connection.SetDeadline(time.Now().Add(1 * time.Second))
 	}
 	return SocketConnection{connection}, err
