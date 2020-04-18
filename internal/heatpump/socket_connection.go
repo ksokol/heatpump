@@ -30,8 +30,10 @@ func (so *SocketConnection) read() (int32, error) {
 }
 
 func (so *SocketConnection) close() {
-	_ = so.connection.Close()
-	log.Printf("connection to %v closed", address)
+	if so.connection != nil {
+		_ = so.connection.Close()
+		log.Printf("connection to %v closed", address)
+	}
 }
 
 func newSocketConnection() (SocketConnection, error) {
