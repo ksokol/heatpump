@@ -2,13 +2,22 @@ version: '2.4'
 
 services:
   influxdb:
-    image: influxdb
+    image: influxdb:1.8.0
     ports:
-      - "80:8086"
+      - "8086:8086"
+    environment:
+      INFLUXDB_ADMIN_USER: "admin"
+      INFLUXDB_ADMIN_PASSWORD: "admin"
+      INFLUXDB_DB: "heatpump"
+      INFLUXDB_HTTP_AUTH_ENABLED: "true"
+      INFLUXDB_USER: "heatpump"
+      INFLUXDB_USER_PASSWORD: "heatpump"
 
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana:6.7.1
     ports:
       - "3000:3000"
+    volumes:
+      - ./docker/grafana:/etc/grafana
     depends_on:
       - influxdb

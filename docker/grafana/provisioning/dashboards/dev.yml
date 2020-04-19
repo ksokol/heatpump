@@ -1,0 +1,9 @@
+apiVersion: 1
+
+providers:
+  - name: 'dev'
+    folder: ''
+    folderUid: ''
+    type: file
+    options:
+      path: /etc/grafana/dashboards

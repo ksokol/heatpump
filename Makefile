@@ -9,4 +9,4 @@ build:
 	./scripts/build.sh
 
 start: build
-	bin/heatpump -verbose
+	bin/heatpump-x86 -db heatpump -source 192.168.84.45 -target http://localhost:8086 -username heatpump -password heatpump -verbose
