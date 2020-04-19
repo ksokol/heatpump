@@ -99,7 +99,7 @@ func parseValues(values *[]int32, m *Metric) {
 			if !((*values)[56] == 0 || (*values)[57] == 0) {
 				m.addOperatingHour(
 					"cmp1_runtime_avg",
-					formatDouble(float32((*values)[56]/60)/float32((*values)[57])),
+					(*values)[56]/(*values)[57],
 				)
 			}
 		case 60:
