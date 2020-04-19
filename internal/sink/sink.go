@@ -37,6 +37,10 @@ func SendMetric(reader io.Reader) error {
 
 	resp, err := client.Do(req)
 
+	if err != nil {
+		client.CloseIdleConnections()
+	}
+
 	if err == nil && resp.StatusCode != 204 {
 		err = fmt.Errorf("%v", resp)
 	}
